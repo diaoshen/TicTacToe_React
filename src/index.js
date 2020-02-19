@@ -45,6 +45,11 @@ class Board extends React.Component {
 }
   
 class Game extends React.Component {
+    /**
+     * 
+     * @description: construct game state consists of history which is array of Squares Object
+     *  Square object is array of representation of the square values 
+     */
     constructor(props) {
       super(props);
       this.state = {
@@ -56,14 +61,26 @@ class Game extends React.Component {
       };
     }
 
+    /**
+     * @description:  Update game board for the square is clicked only no winner yet or squared is empty.
+     * @param {*} i  : The square number  
+     */
     handleClick(i) {
+      
+      //Get current game board based on STEP 
       const history = this.state.history.slice(0, this.state.stepNumber + 1);
       const current = history[history.length - 1];
       const squares = current.squares.slice();
+      
+      //Don't proceed if there is a winner or square is already filled. 
       if (calculateWinner(squares) || squares[i]) {
         return;
       }
+
+      //Set turn for next player 
       squares[i] = this.state.xIsNext ? 'X' : 'O';
+
+      //Update State by adding to history 
       this.setState({
         history: history.concat([{
           squares: squares
@@ -73,6 +90,10 @@ class Game extends React.Component {
       });
     }
 
+    /**
+     * 
+     * Jump to certain state by updating Game state 
+     */
     jumpTo(step) {
       this.setState({
         stepNumber: step,
@@ -80,6 +101,10 @@ class Game extends React.Component {
       });
     }
 
+    /**
+     * Map history to generate jump to buttons 
+     * Then Renders Board and pass current move squares as props 
+     */
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
@@ -130,7 +155,10 @@ class Game extends React.Component {
 
 
 
-
+/**
+ * @description Returns X or O if there is a win , else null 
+ * @param {*} squares array of ints 
+ */
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
